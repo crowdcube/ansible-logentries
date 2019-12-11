@@ -30,13 +30,11 @@
   when: ansible_os_family == "RedHat"
 
 - name: Install packages YUM
-  yum: name={{ item }} state=present
-  with_items: '{{ logentries_packages }}'
+  yum: name={{ logentries_packages }} state=present
   when: ansible_os_family == "RedHat"
 
 - name: Install packages APT
-  apt: name={{ item }} state=present
-  with_items: '{{ logentries_packages }}'
+  apt: name={{ logentries_packages }} state=present
   when: ansible_os_family == "Debian"
 
 - name: Ensure logentries config directory exists
@@ -61,7 +59,9 @@
   when: result is failed and logentries_set_key is not defined
 
 - name: Install logentries daemon APT
-  apt: name={{ logentries_daemon_package }} state=present
+  apt: 
+    - name: {{ logentries_daemon_package }} 
+    - state: present
   when: ansible_os_family == "Debian"
 
 - name: Install logentries daemon YUM

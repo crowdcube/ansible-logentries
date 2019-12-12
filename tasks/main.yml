@@ -60,12 +60,14 @@
 
 - name: Install logentries daemon APT
   apt: 
-    - name: {{ logentries_daemon_package }} 
+    - name: "{{ logentries_daemon_package }}"
     - state: present
   when: ansible_os_family == "Debian"
 
 - name: Install logentries daemon YUM
-  yum: name={{ logentries_daemon_package }} state=present
+  yum: 
+    - name: {{ logentries_daemon_package }} 
+    - state: present
   when: ansible_os_family == "RedHat"
 
 - name: Follow logs

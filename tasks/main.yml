@@ -16,14 +16,14 @@
     id: "{{ item.id }}"
     keyserver: "{{ item.keyserver }}" 
     state: present
-  with_items: "{{ logentries_apt_keys }}"
+  loop: "{{ logentries_apt_keys | flatten(1) }}"
   when: ansible_os_family == "Debian"
 
 - name: Add APT repositories
   apt_repository: 
     repo: "{{ item }}" 
     update_cache: yes
-  with_items: "{{ logentries_apt_repositories }}"
+  loop: "{{ logentries_apt_repositories | flatten(1) }}"
   when: ansible_os_family == "Debian"
 
 - name: Install prequesites for RedHat
@@ -96,9 +96,9 @@
 - name: Follow logs
   logentries: 
     path: "{{ item.path }}"
-    state: "{{ item.state | default("present") }}"
+    state: "present"
     name: "{{ item.name | default(item.path) }}"
-  with_items: "{{ logentries_logs }}"
+  loop: "{{ logentries_logs | flatten(1) }}"
   notify: "restart logentries"
 
 - name: Ensure logentries service running
